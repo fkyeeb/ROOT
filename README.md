@@ -1,6 +1,4 @@
 # ROOT <!-- omit in toc -->
-
-## Table of Contents <!-- omit in toc -->
 - [Overview](#overview)
   - [How to use](#how-to-use)
   - [Dependencies](#dependencies)
