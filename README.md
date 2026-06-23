@@ -206,7 +206,7 @@ python select_paralog_reference.py <outgroup_file> <h2o_processed_trees_folder> 
 
 ## 3.1 Pull assembled hybpiper contigs and combine with genomic sequences
 
-Output fasta files of hybpiper contigs and genomic sequences for each gene in each sample. Each sample has its own folder in the output folder. Output fasta files are written into each sample's folder. Also output `all_contigs.fa` and `all_contig_positions.tsv` in the output directory. `all_contigs.fa` contains all the filtered contigs and `all_contig_positions.tsv` records all alignment information of the contigs with the reference sequences, which will be used for contig stitching.
+Output fasta files of hybpiper contigs and genomic sequences for each gene in each sample. Each sample has its own folder in the output folder. Output fasta files are written into each sample's folder. Also output `all_contigs.fa` and `all_contig_positions.tsv` in the output directory. `all_contigs.fa` contains all the filtered contigs and `all_contig_positions.tsv` records all alignment information of the contigs with the reference sequences, which will be used for contig stitching. If the gene only has one contig for this sample, the fasta file will not be written to the sample folder, because it doesn't need to be grouped. But this contig will go into `all_contigs.fa`.
 
 ```console
 python extract_hybpiper_contigs.py <sample_names_file> <gene_names_file> <genomic_sequence_folder> <hybpiper_result_folder> <output_folder> <fasta_file_ending-optional>
@@ -237,7 +237,7 @@ done
 
 ## 3.3 Group orthologous contigs from homolog gene trees
 
-Output a `contig_groups-<tree_file_folder>.tsv` file contains all ortholog contig group information in the current directory.
+Output a `contig_groups-<tree_file_folder>.tsv` file contains all ortholog contig group information in the current directory. If this gene has no valid group, it will not be listed in this file. This script will also print a percentage of total contigs grouped (for genes with more than one contig), which may help verify the choice of NN and BL thresholds.
 
 ```console
 python group_contigs.py <tree_file_folder> <tree_file_ending> <sample_names_file> <NN-optional> <BL-optional>
@@ -245,12 +245,12 @@ python group_contigs.py <tree_file_folder> <tree_file_ending> <sample_names_file
 - `<tree_file_folder>` - the folder containing the phylogenies from step 3.2
 - `<tree_file_ending>` - `.aln-cln.raxml.bestTree` if you followed this tutorial. The script expects the tree file names to be `<gene_name><tree_file_ending>`.
 - `<sample_names_file>` - all sample names in a file, one name per line.
-- `<NN-optional>` - the number of nodes threshold for grouping contigs. Default is 5 if no argument is entered. Should adjust based on the size of your reference dataset.
-- `<BL-optional>` - the branch length threshold for grouping contigs. Default is 0.05 if no argument is entered. Should adjust based on the age of your clade.
+- `<NN-optional>` - the number of nodes threshold for grouping contigs. Default is 5 if no argument is entered. The cutoff should be applicable to other datasets, but you should check the reported percentage and trees for sanity check.
+- `<BL-optional>` - the branch length threshold for grouping contigs. Default is 0.05 if no argument is entered. The cutoff should be applicable to other datasets, but you should check the reported percentage and trees for sanity check.
 
 ## 3.4 Stitch contigs and combine with reference sequences
 
-First, stitches the contigs together. In the output folder, the stitched contigs of each gene is written in `*_stitched.fa`. Also, `stitched_all.fa` contains all stitched contigs, `stitched_info.tsv` records all the contigs are stitched together, and `copy_counts.tsv` records how many copies of each gene is produced for each sample, written in the output folder.
+First, stitches the contigs together. In the output folder, the stitched contigs of each gene is written in `*_stitched.fa`. Also, `stitched_all.fa` contains all stitched contigs, `stitched_info.tsv` records all the contigs are stitched together, and `copy_counts.tsv` records how many copies of each gene is produced for each sample, written in the output folder. If a gene has no valid group but has contigs, it will output the longest contig.
 ```console
 python stitch_contigs.py <sample_names_file> <gene_names_file> <contig_folder> <contig_groups_tsv> <output_folder> <max_copies-optional> <min_overlap-optional>
 ```

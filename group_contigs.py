@@ -90,6 +90,8 @@ def main():
     # out = open("contig_groups.tsv", "w")
     out = open(f"contig_groups-{args[1]}.tsv", "w")
 
+    total_contigs = 0
+    contigs_in_groups = 0
     for sample in samples:
         sample_folder = folder + sample + "/"
         for file in os.listdir(sample_folder):
@@ -121,8 +123,12 @@ def main():
                     root = find(parent, name)
                     groups.setdefault(root, []).append(name)
                 good_contigs_groups = [g for g in groups.values() if len(g) >= 2]
+                total_contigs += len(contig_names)
+                contigs_in_groups += sum(len(g) for g in good_contigs_groups)
                 for group in good_contigs_groups:
                     out.write(f"{sample}\t{gene}\t{','.join(group)}\n")
+    print(f"Given the thresholds, NN = {num_nodes_threshold}, BL = {total_len_threshold}:")
+    print(f"  {contigs_in_groups/total_contigs*100:.2f}% out of {total_contigs} contigs are grouped for genes with more than one contig.")
     # list of contigs to stitch for each gene
 
 if __name__ == '__main__':
