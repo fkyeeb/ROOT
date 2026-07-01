@@ -1,4 +1,5 @@
-# ROOT <!-- omit in toc -->
+<img src="logo.jpg" alt="Alt text" width="350">
+
 - [Overview](#overview)
   - [How to use](#how-to-use)
   - [Dependencies](#dependencies)
